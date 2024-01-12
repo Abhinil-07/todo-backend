@@ -46,6 +46,25 @@ app.put("/edit-todos", async function (req, res) {
     { new: true } // If you want to get the updated document in the response
   );
 });
+app.delete('/delete-todo/:id', async (req, res) => {
+  const todoId = req.params.id;
+
+  try {
+    // Use findByIdAndDelete to find the todo by ID and remove it
+    const deletedTodo = await todo.findByIdAndDelete(todoId);
+
+    if (deletedTodo) {
+      // Successful deletion
+      res.status(200).json({ message: 'Todo deleted successfully', deletedTodo });
+    } else {
+      
+      res.status(404).json({ message: 'Todo not found' });
+    }
+  } catch (error) {
+    // Error during deletion
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
+});
 app.listen(3000, (req, res) => {
   console.log("Server running on port 3000");
 });
